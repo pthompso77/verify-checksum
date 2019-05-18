@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
-
 import numpy as np
 import sys
 import hashlib
-#TODO
-# import setuplib
 
 
 
@@ -29,30 +25,40 @@ alg_dict = {
 }
 
 
+# def read_digest0(filename):
+#     with open(filename, 'rb') as f:
+#         b = f.read().rstrip()
+#     return b.decode('utf-8')
+
 def read_digest(filename):
-    with open(filename, 'rb') as f:
+    with open(filename, 'r') as f:
         b = f.read().rstrip()
-    return b.decode('utf-8')
+    return b
 
 
-
-def compare_hash(filename, digest, algorithm_used):
+def hashit(filename, algorithm_used):
     alg = alg_dict[algorithm_used]()
     with open(filename, 'rb') as f:
         b = f.read().rstrip()
         alg.update(b)
-    return alg.hexdigest() == digest
+    return alg.hexdigest()
 
 
-
-def main(filename_to_check, hash_alg, hash_filename, sig_key = None):
-    # step 1. ensure components are installed
-    # setuplib.install_components()
-
-    digest = read_digest(hash_filename)
-    match = compare_hash(filename_to_check, digest, hash_alg)
-    print('matches?',match)
+def main(filename_to_check, hash_alg, hashdig, hashdig_is_file=False):
+    if hashdig_is_file:
+        digest = read_digest(hashdig)
+    else: digest = hashdig
+    newdigest = hashit(filename_to_check, hash_alg)
+    # match = newdigest == digest
+    # print('matches?',match)
+    return newdigest
 
 
 if __name__=='__main__':
-    main(sys.argv[1],sys.argv[2],sys.argv[3])
+    argv = sys.argv
+    if len(argv) < 2:
+        argv.append('files/hibernate-search-5.8.0.Final-dist.tar.gz')
+        argv.append('md5')
+        argv.append('files/hibernate-Hash')
+        argv.append(True)
+    print(main(argv[1],argv[2],argv[3],argv[4]))

@@ -160,5 +160,5 @@ Button(window,text='COMPARE',height=2,width=20,
 
 
 if __name__ == '__main__':
-    ##### run the main loop
+    ## run the main loop
     window.mainloop()
